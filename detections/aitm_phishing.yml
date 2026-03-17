@@ -1,0 +1,65 @@
+title: Suspicious Phishing and Login Activity via Proxy Logs
+id: 5c5e941f-aeaf-4e99-b5c5-f448687f8fc8
+status: experimental
+description: |
+    Detects potential phishing activity and suspicious login attempts
+    based on proxy logs indicating phishing classification, suspicious
+    identity provider redirects, and login endpoint access.
+author: sivaram
+date: 2026-03-18
+logsource:
+    category: proxy
+    product: zscaler
+
+# Note: Full AITM detection requires stateful correlation
+# across multiple events using KQL/SPL/EQL.
+# This rule covers early-stage phishing domain detection
+# only. For session cookie theft detection implement
+# impossible travel logic in your SIEM correlation rules.
+
+detection:
+
+    selection_phishing_domain:
+        reason: Phishing
+
+    selection_suspicious_redirect:
+        url|contains:
+            - okta-secure
+            - okta-login
+            - microsoftonline-secure
+            - login-microsoftonline
+            - secure-okta
+
+    selection_login_activity:
+        url|contains:
+            - /login
+            - /signin
+            - /oauth
+            - /auth
+
+    filter_internal_ip:
+        c-ip|startswith:
+            - '10.'
+            - '192.168.'
+            - '172.16.'
+            - '172.17.'
+            - '172.18.'
+
+    condition: ((selection_phishing_domain) or (selection_suspicious_redirect)) or ((selection_login_activity)  and not (filter_internal_ip))
+
+fields:
+    - c-ip
+    - url
+    - reason
+falsepositives:
+    - Security testing tools accessing phishing simulation domains
+    - Legitimate identity provider redirects
+    - Users accessing SSO portals from external networks
+level: high
+tags:
+    - attack.credential_access
+    - attack.t1557
+    - attack.t1539
+references:
+    - https://attack.mitre.org/techniques/T1557/
+    - https://attack.mitre.org/techniques/T1539/
