@@ -1,0 +1,33 @@
+title: Okta Suspicious Login - MFA Fatigue and Impossible Travel
+id: 983cb95e-3b49-4edd-8000-4c0db10a6048
+status: experimental
+description:  Detects suspicious Okta authentication events including MFA fatigue attacks and impossible travel scenarios targeting fintech identity infrastructure
+references:
+    - https://attack.mitre.org/techniques/T1078/
+    - https://attack.mitre.org/techniques/T1110/
+author: sivaram
+date: 2024/03/18
+tags:
+    - attack.t1078
+    - attack.t1110
+    - attack.initial_access
+    - attack.credential_access
+logsource:
+    product: okta
+    service: system
+detection:
+    selection_mfa_fatigue:
+        eventType:
+            - user.mfa.okta_verify.deny_push
+            - user.mfa.okta_verify.check.failure
+            - user.mfa.okta_verify.timeout
+    selection_suspicious_login:
+        eventType:
+            - security.threat.detected
+            - user.session.start
+    condition: selection_mfa_fatigue or selection_suspicious_login
+falsepositives:
+    - Legitimate users traveling internationally
+    - VPN usage triggering proxy detection
+    - Administrators testing MFA configurations
+level: critical
