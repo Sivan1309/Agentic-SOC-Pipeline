@@ -1,0 +1,82 @@
+title: Anomalous API Enumeration Detection
+id: 6ec8246a-0d5e-4d15-b622-a913c3ff4982
+title: AWS CloudTrail API Enumeration via Unauthorized and Nonexistent Resource Access
+id: 6a9f3c2d-api-enumeration-aws
+status: experimental
+description: |
+    Detects potential API enumeration in AWS by identifying repeated unauthorized
+    and nonexistent resource access attempts across multiple services. This may
+    indicate reconnaissance activity by an attacker probing for valid resources
+    or permissions.
+
+author: sivaram
+date: 2026-03-19
+
+logsource:
+    product: aws
+    service: cloudtrail
+
+detection:
+
+
+    selection_api_errors:
+        errorCode:
+            - AccessDenied
+            - UnauthorizedOperation
+            - NoSuchEntity
+            - NoSuchBucket
+            - NoSuchKey
+            - UnauthorizedAccess
+            - NoSuchResource
+
+    selection_api_targets:
+        eventName:
+            - DescribeInstances
+            - ListBuckets
+            - GetObject
+            - ListUsers
+            - GetRole
+            - ListRoles
+            - ListFunctions
+            - GetFunction
+
+    filter_known_sources:
+        sourceIPAddress:
+            - 'AWS Internal'
+            - 'cloudtrail.amazonaws.com'
+            - 'lambda.amazonaws.com'
+            - 'config.amazonaws.com'
+            - 'guardduty.amazonaws.com'
+            - 'trustedadvisor.amazonaws.com'
+
+    selection_user_context:
+        userIdentity.type:
+            - IAMUser
+            - AssumedRole
+
+    condition: selection_api_errors and selection_api_targets and selection_user_context and not filter_known_sources
+
+fields:
+    - sourceIPAddress
+    - eventName
+    - eventSource
+    - errorCode
+    - userIdentity.arn
+
+falsepositives:
+    - Developers testing IAM permissions
+    - Misconfigured automation scripts
+    - Legitimate applications accessing non-existing resources
+    - Legitimate security scanning tools
+    - AWS Config and compliance tools
+    - Developers testing API permissions
+
+level: high
+
+tags:
+    - attack.discovery
+    - attack.t1046
+    - attack.t1190
+references:
+    - https://attack.mitre.org/techniques/T1046/
+    - https://attack.mitre.org/techniques/T1190/
