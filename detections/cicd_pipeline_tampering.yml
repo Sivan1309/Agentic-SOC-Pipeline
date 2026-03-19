@@ -1,0 +1,66 @@
+title: Jenkins CI/CD Pipeline Tampering and Privilege Abuse Detection
+id: 121d4756-e788-4923-9ede-40867aebb296
+status: experimental
+description: Detects suspicious Jenkins activity including unauthorized admin account creation, pipeline modifications, plugin installation, and credential access which may indicate CI/CD pipeline tampering or supply chain compromise.
+author: Sivaram
+date: 2026-03-19
+
+references:
+    - https://attack.mitre.org/techniques/T1195/002/
+    - https://attack.mitre.org/techniques/T1072/
+
+tags:
+    - attack.initial_access
+    - attack.persistence
+    - attack.privilege_escalation
+    - attack.credential_access
+    - attack.t1195.002
+    - attack.t1072
+
+logsource:
+    product: jenkins
+    service: audit
+
+detection:
+    selection_admin_creation:
+        eventType: USER_CREATED
+        userRole: admin
+
+    selection_pipeline_modification:
+        eventType:
+            - JOB_UPDATED
+            - JOB_CONFIG_CHANGED
+        jobName|contains:
+            - pipeline
+            - Jenkinsfile
+
+    selection_plugin_installation:
+        eventType:
+            - PLUGIN_INSTALLED
+            - PLUGIN_UPDATED
+
+    selection_credential_access:
+        eventType:
+            - CREDENTIALS_ACCESSED
+            - CREDENTIALS_READ
+
+    filter_known_users:
+        user|startswith:
+            - svc_
+            - system
+
+    condition: (selection_admin_creation or selection_pipeline_modification or selection_plugin_installation or selection_credential_access) and not filter_known_users
+
+fields:
+    - user
+    - eventType
+    - jobName
+    - sourceIPAddress
+
+falsepositives:
+    - Legitimate Jenkins administrators performing maintenance
+    - Approved plugin installations during change windows
+    - CI/CD automation accounts accessing credentials
+    - Scheduled pipeline updates via DevOps workflows
+
+level: critical
