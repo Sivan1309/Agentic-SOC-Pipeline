@@ -268,4 +268,5 @@ done
 
 Sivaram
 Senior Security Engineer Candidate
-Built as working prototype demonstrating Detection as Code for fintech SOC environment.
+Built as working prototype demonstrating 
+Detection as Code for fintech SOC environment.
