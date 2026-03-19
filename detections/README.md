@@ -266,7 +266,7 @@ done
 
 ## Author
 
-Sivaram
-Senior Security Engineer Candidate
-Built as working prototype demonstrating 
-Detection as Code for fintech SOC environment.
+Sivaram  
+Senior Security Engineer Candidate  
+Built as working prototype demonstrating Detection as Code  
+for fintech SOC environment.
