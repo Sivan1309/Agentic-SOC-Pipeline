@@ -1,0 +1,25 @@
+{
+  "finding_id": "xyz789ghi012",
+  "type": "CryptoCurrency:EC2/BitcoinTool.B",
+  "severity": 5.0,
+  "region": "ap-south-2",
+  "account_id": "123456789012",
+  "description": "EC2 instance is querying a domain name associated with cryptocurrency-related activity.",
+  "service": {
+    "action": {
+      "actionType": "DNS_REQUEST",
+      "dnsRequestAction": {
+        "domain": "pool.minexmr.com",
+        "protocol": "UDP",
+        "blocked": false
+      }
+    }
+  },
+  "resource": {
+    "resourceType": "Instance",
+    "instanceDetails": {
+      "instanceId": "i-0123456789abcdef",
+      "instanceType": "t3.small"
+    }
+  }
+}

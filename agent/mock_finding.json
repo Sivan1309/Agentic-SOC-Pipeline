@@ -1,0 +1,29 @@
+{
+  "finding_id": "abc123def456",
+  "type": "UnauthorizedAccess:IAMUser/MaliciousIPCaller",
+  "severity": 8.0,
+  "region": "ap-south-2",
+  "account_id": "123456789012",
+  "description": "APIs commonly used to discover the users, groups, policies and permissions in an account were called from a known malicious IP address.",
+  "service": {
+    "action": {
+      "actionType": "AWS_API_CALL",
+      "awsApiCallAction": {
+        "api": "ListUsers",
+        "serviceName": "iam.amazonaws.com",
+        "remoteIpDetails": {
+          "ipAddressV4": "198.51.100.1",
+          "country": "Russia",
+          "city": "Moscow"
+        }
+      }
+    }
+  },
+  "resource": {
+    "resourceType": "AccessKey",
+    "accessKeyDetails": {
+      "userName": "svc-partner-integration",
+      "userType": "IAMUser"
+    }
+  }
+}

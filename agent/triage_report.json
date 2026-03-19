@@ -1,0 +1,20 @@
+{
+  "finding_id": "mno345pqr678",
+  "severity_assessment": "High",
+  "severity_reasoning": "Low GuardDuty severity score (3.0) is misleading in this context. Reconnaissance activity targeting IAM permissions represents a critical precursor to privilege escalation or lateral movement. The combination of unusual API call pattern (GetPolicyVersion), IAM user targeting, and anomalous geographic origin (India) from what appears to be a development account credential elevates the actual risk to High. This is classic adversary behavior during the reconnaissance phase of an attack.",
+  "mitre_technique": "T1087 - Account Discovery",
+  "mitre_tactic": "Reconnaissance",
+  "attack_summary": "An IAM user credential (dev-user-01) is being used from an unusual geographic location (Chennai, India) to enumerate IAM policies and permissions. This reconnaissance activity suggests an attacker is mapping the privilege structure and access controls of the AWS account, likely to identify high-value targets or escalation paths.",
+  "recommended_action": "Escalate",
+  "action_reasoning": "This finding warrants escalation due to: (1) Confirmed unusual behavior for the user profile, (2) Credential potentially compromised or misused (geographic anomaly), (3) Active reconnaissance against security-critical IAM APIs, (4) Development account access could provide insight into production architecture. Immediate investigation and containment are required to prevent follow-on attacks.",
+  "immediate_steps": [
+    "Verify if dev-user-01 has legitimate business reason to access from India; contact user/manager immediately",
+    "Rotate all access keys associated with dev-user-01 and revoke active sessions",
+    "Review CloudTrail logs for past 7 days to identify all API calls from this IP (203.0.113.45) and associated user actions",
+    "Audit the IAM policies attached to dev-user-01 and review any permissions they have that could enable privilege escalation",
+    "Check if this IP has been used to access other AWS accounts or services in your organization",
+    "Enable MFA enforcement and IP restrictions on IAM user credentials if not already in place",
+    "Analyze other findings from this account for related reconnaissance activity"
+  ],
+  "analyst_notes": "GuardDuty's low severity score should not anchor the triage decision here. The finding exhibits classic indicators of account compromise: geographic anomaly, privilege enumeration APIs, and unusual user behavior. The fact this is a 'dev' account does not reduce risk\u2014development accounts often have broader permissions and knowledge of system architecture. Consider this a potential persistent access indicator (PAI) and treat as a security incident until proven otherwise. If the user legitimately accessed from India, implement controls to prevent future false positives (e.g., VPN allowlisting, location-based policies)."
+}

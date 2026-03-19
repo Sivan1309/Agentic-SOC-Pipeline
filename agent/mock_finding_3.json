@@ -1,0 +1,29 @@
+{
+  "finding_id": "mno345pqr678",
+  "type": "Recon:IAMUser/UserPermissions",
+  "severity": 3.0,
+  "region": "ap-south-2",
+  "account_id": "123456789012",
+  "description": "APIs commonly used to discover the users, groups, policies and permissions in an account were called by an IAMUser. This activity is unusual for this user.",
+  "service": {
+    "action": {
+      "actionType": "AWS_API_CALL",
+      "awsApiCallAction": {
+        "api": "GetPolicyVersion",
+        "serviceName": "iam.amazonaws.com",
+        "remoteIpDetails": {
+          "ipAddressV4": "203.0.113.45",
+          "country": "India",
+          "city": "Chennai"
+        }
+      }
+    }
+  },
+  "resource": {
+    "resourceType": "AccessKey",
+    "accessKeyDetails": {
+      "userName": "dev-user-01",
+      "userType": "IAMUser"
+    }
+  }
+}
