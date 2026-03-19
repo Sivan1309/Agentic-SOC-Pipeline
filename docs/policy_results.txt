@@ -1,0 +1,12 @@
+[31mFAIL[0m - infrastructure/tfplan.json - terraform.aws.s3 - S3 bucket 'bad_bucket' must have encryption enabled. PCI DSS Req 3.5
+
+[31m1 test, 0 passed, 0 warnings, 1 failure, 0 exceptions[0m
+---
+
+[32m2 tests, 2 passed, 0 warnings, 0 failures, 0 exceptions[0m
+---
+
+[32m2 tests, 2 passed, 0 warnings, 0 failures, 0 exceptions[0m
+---
+
+[32m1 test, 1 passed, 0 warnings, 0 failures, 0 exceptions[0m
